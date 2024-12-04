@@ -3,8 +3,10 @@ package org.example.clinicalsapi.controllers;
 import org.example.clinicalsapi.models.Patient;
 import org.example.clinicalsapi.repos.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,8 +25,12 @@ public class PatientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Patient> getPatientById(@PathVariable Integer id) {
-        Optional<Patient> patient = patientRepository.findById(id);
-        return patient.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        try {
+            Optional<Patient> patient = patientRepository.findById(id);
+            return patient.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving patient", e);
+        }
     }
 
     @PostMapping
