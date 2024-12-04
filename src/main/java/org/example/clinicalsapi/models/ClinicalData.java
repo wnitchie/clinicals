@@ -3,6 +3,7 @@ package org.example.clinicalsapi.models;
 //clinical data jpa model class with component name, component value, patient id, measured date
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
@@ -10,10 +11,13 @@ import java.util.Date;
 @Table(name = "clinicaldata")
 public class ClinicalData {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clinicaldata_seq")
+    @SequenceGenerator(name = "clinicaldata_seq", sequenceName = "clinicaldata_seq", allocationSize = 1)
     private int id;
     private String componentName;
     private String componentValue;
+
+    @CreationTimestamp
     private Date measuredDateTime;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)

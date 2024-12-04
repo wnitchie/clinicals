@@ -1,7 +1,10 @@
 package org.example.clinicalsapi.controllers;
 
+import org.example.clinicalsapi.dto.ClinicalDataRequest;
 import org.example.clinicalsapi.models.ClinicalData;
+import org.example.clinicalsapi.models.Patient;
 import org.example.clinicalsapi.repos.ClinicalDataRepository;
+import org.example.clinicalsapi.repos.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,9 @@ public class ClinicalDataController {
 
     @Autowired
     private ClinicalDataRepository clinicalDataRepository;
+
+    @Autowired
+    private PatientRepository patientRepository;
 
     @GetMapping
     public List<ClinicalData> getAllClinicalData() {
@@ -55,5 +61,16 @@ public class ClinicalDataController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    //method that receives patient id, clinical data and saves it to the database
+    @PostMapping("/clinicals")
+    public ClinicalData saveClinicalData(@RequestBody ClinicalDataRequest dataRequest) {
+        ClinicalData clinicalData = new ClinicalData();
+        clinicalData.setComponentName(dataRequest.getComponentName());
+        clinicalData.setComponentValue(dataRequest.getComponentValue());
+        Patient patient = patientRepository.findById(dataRequest.getPatientId()).get();
+        clinicalData.setPatient(patient);
+        return clinicalDataRepository.save(clinicalData);
     }
 }
