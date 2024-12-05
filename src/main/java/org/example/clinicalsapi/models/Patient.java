@@ -9,7 +9,8 @@ import java.util.List;
 @Entity
 public class Patient {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "patient_seq")
+    @SequenceGenerator(name = "patient_seq", sequenceName = "patient_seq", allocationSize = 1)
     private int id;
     private String firstName;
     private String lastName;

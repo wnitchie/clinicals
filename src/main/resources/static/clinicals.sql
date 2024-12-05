@@ -17,6 +17,7 @@ CREATE TABLE clinicaldata (
                                   REFERENCES patient(id)
 );
 
+CREATE SEQUENCE patient_seq START 100;
 CREATE SEQUENCE clinicaldata_seq START 100;
 
 insert into patient values(1,'John','Mccain',52);
